@@ -1,0 +1,247 @@
+/* 기본 초기화 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0b0c10;
+    color: #ffffff;
+    font-family: 'Malgun Gothic', sans-serif;
+    overflow: hidden;
+}
+
+/* 좌우 분할 컨테이너 */
+#app-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 왼쪽 캔버스 구역 */
+#canvas-area {
+    flex-grow: 1;    /* ★ 핵심: 오른쪽 메뉴바를 뺀 나머지 공간을 모두 차지함 */
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+    overflow: hidden;
+}
+
+/* 실제 Konva 캔버스가 그려질 상자 */
+#konva-holder {
+    width: 100%;     /* 부모인 canvas-area 너비에 꽉 맞춤 */
+    flex-grow: 1;
+}
+
+/* 오른쪽 사이드바 구역 */
+#sidebar {
+    width: 320px;
+    background-color: #0f1115;
+    border-left: 2px solid #1f2530;
+    padding: 20px;
+    padding-top: 10px;    /* 최상단 여백 살짝 줄임 */
+    overflow-y: auto;
+}
+
+#sidebar > h2 {
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+    padding-top: 10px;    /* 위쪽 여유 공간 */
+    padding-bottom: 5px;  /* 아래 버튼과의 간격을 좁힘 */
+    margin-bottom: 0;     /* 버튼 박스와 딱 붙도록 마진 제거 */
+    border-bottom: none;  /* ★ 타이틀 아래 구분선 제거 */
+    letter-spacing: 3px;
+    font-weight: 800;
+}
+
+/* 맵 그룹화 디자인 */
+.map-group {
+    margin-bottom: 20px;
+    background-color: #161a22;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.map-name {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #8c9cb0;
+    margin-bottom: 8px;
+}
+
+/* 버튼들을 스크린샷처럼 2열 그리드로 정렬 */
+.btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+/* 기본 메뉴 버튼 */
+.menu-btn {
+    background-color: #242b35;
+    color: #c5c6c7;
+    border: 1px solid #333d4b;
+    padding: 10px 5px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.menu-btn:hover {
+    background-color: #384556;
+    color: #ffffff;
+}
+
+/* 선택된 버튼 하이라이트 (스크린샷의 주황색 느낌) */
+.menu-btn.active {
+    background-color: #ff9f1c;
+    color: #000000;
+    font-weight: bold;
+    border-color: #ff9f1c;
+}
+
+/* 컨트롤 박스 레이아웃 */
+.control-box {
+    display: flex;
+    gap: 10px;
+    padding-top: 5px;     /* 타이틀과의 간격 */
+    padding-bottom: 20px; /* 아래 목록(맵/가젯)과의 구분선 전 여유 공간 */
+    margin-bottom: 20px;
+    border-bottom: 1px solid #1f2530; /* ★ 목록과 구분되는 선 하나만 유지 */
+}
+
+/* 기본 컨트롤 버튼 스타일 */
+.ctrl-btn {
+  flex: 1;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.ctrl-btn:hover {
+  background-color: #444;
+}
+
+/* 전체 초기화 버튼 (경고색 반영) */
+.ctrl-btn.reset {
+  background-color: #8b0000;
+  border-color: #b22222;
+}
+
+.ctrl-btn.reset:hover {
+  background-color: #b22222;
+}
+
+.tool-btn {
+  background-color: #2c2f33;
+  color: white;
+  border: 1px solid #444;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.tool-btn:hover {
+  background-color: #40444b;
+}
+
+/* 2. style.css 맨 아래에 새로 추가할 그리기 툴바 디자인 */
+.top-toolbar {
+  display: flex;
+  justify-content: space-between; /* 왼쪽, 오른쪽 그룹을 양 끝으로 밀어냄 */
+  align-items: center;
+  background-color: #1e1e24; /* 현재 UI와 어울리는 어두운 배경 */
+  padding: 10px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toolbar-left, .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 버튼 사이 간격 */
+}
+
+.toolbar-right .tool-btn.active {
+  background-color: #ff4757;
+  border-color: #ff4757;
+  color: #ffffff;
+}
+
+.divider {
+  width: 2px;
+  height: 24px;
+  background-color: #555;
+  margin: 0 5px;
+}
+
+/* 사이드바 패널 스위칭용 (숨김/표시) */
+.panel {
+    display: none;
+}
+.panel.active {
+    display: block;
+}
+
+/* 상단 탭 버튼 활성화 디자인 (스크린샷의 주황색 느낌 통일) */
+.tab-btn.active {
+    background-color: #ff9f1c;
+    color: #000000;
+    border-color: #ff9f1c;
+}
+
+.panel h2 {
+    font-size: 16px;
+    color: #a3b8cc; /* 보조 제목은 살짝 차분한 색으로 */
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* 우클릭 검색창 스타일 */
+#search-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 그림자 효과로 입체감 부여 */
+    width: 250px;
+    z-index: 1000; /* 다른 요소들(캔버스 등) 무조건 위에 뜨게 설정 */
+    display: none; /* 처음에는 무조건 숨김 */
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 자바스크립트로 visible 클래스가 붙으면 화면에 나타남 */
+#search-menu.visible {
+    display: flex;
+}
+
+#search-input {
+    padding: 12px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    outline: none;
+    font-size: 14px;
+}
+
+#search-results {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto; /* 결과가 많으면 스크롤 생성 */
+}

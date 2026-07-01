@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레식 전략판 (R6 Tactical Board)</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+</head>
+<body>
+    <div id="app-container">
+
+        <div id="canvas-area">
+            <div id="top-toolbar" class="top-toolbar">
+  
+                
+
+                <div class="toolbar-right">
+                    <button id="eraser-btn" class="tool-btn">🧽 지우기</button>
+                    <button id="arrow-btn" class="tool-btn">↗️ 화살표</button>
+                    <button id="draw-btn" class="tool-btn">✏️ 그리기</button>
+                    
+                    <div class="divider"></div> <label>Color <input type="color" id="color-picker" value="#ff0000"></label>
+                    <label>Size <input type="number" id="brush-size" value="4" min="1" max="50"></label>
+                </div>
+
+            </div> 
+            
+            <div id="konva-holder"></div>
+        </div>
+
+        <div id="sidebar">
+            <h2>R6 STRAT</h2>
+
+            <div class="control-box">
+                <button id="delete-btn" class="ctrl-btn">선택 가젯 삭제</button>
+                <button id="reset-btn" class="ctrl-btn reset">전체 초기화</button>
+            </div>
+
+            <div id="panel-map" class="panel active">
+                <h2>MAP & FLOORS</h2>
+                <div class="map-group">
+                <span class="map-name">Coastline</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Coastline', '1F')">Coastline 1F</button>
+                    <button class="menu-btn active" onclick="loadMap('Coastline', '2F')">Coastline 2F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Skyscraper</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Skyscraper Rework', '1F')">Skyscraper 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Skyscraper Rework', '2F')">Skyscraper 2F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Bank</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Bank Rework', '1F')">Bank 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Bank Rework', '2F')">Bank 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Bank Rework', 'B1F')">Bank B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Chalet</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Chalet Rework', '1F')">Chalet 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Chalet Rework', '2F')">Chalet 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Chalet Rework', 'B1F')">Chalet B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Themepark</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Themepark', '1F')">Themepark 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Themepark', '2F')">Themepark 2F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Outback</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Outback Rework', '1F')">Outback 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Outback Rework', '2F')">Outback 2F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Consulate</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Consulate Rework', '1F')">Consulate 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Consulate Rework', '2F')">Consulate 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Consulate Rework', 'B1F')">Consulate B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Nighthaven Labs</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Nighthaven Labs', '1F')">Labs 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Nighthaven Labs', '2F')">Labs 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Nighthaven Labs', 'B1F')">Labs B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Border</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Border', '1F')">Border 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Border', '2F')">Border 2F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Villa</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Villa', '1F')">Villas 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Villa', '2F')">Villa 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Villa', 'B1F')">Villa B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Clubhouse</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Clubhouse', '1F')">Clubhouse 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Clubhouse', '2F')">Clubhouse 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Clubhouse', 'B1F')">Clubhouse B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Cafe</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Cafe', '1F')">Cafe 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Cafe', '2F')">Cafe 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Cafe', '3F')">Cafe 3F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Oregon</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Oregon Rework', '1F')">Oregon 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Oregon Rework', '2F')">Oregon 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Oregon Rework', 'B1F')">Oregon B1F</button>
+                </div>
+            </div>
+
+            <div class="map-group">
+                <span class="map-name">Casino</span>
+                <div class="btn-grid">
+                    <button class="menu-btn" onclick="loadMap('Casino', '1F')">Casino 1F</button>
+                    <button class="menu-btn" onclick="loadMap('Casino', '2F')">Casino 2F</button>
+                    <button class="menu-btn" onclick="loadMap('Casino', 'B1F')">Casino B1F</button>
+                </div>
+            </div>
+
+
+        </div>          
+            
+
+    </div>
+
+    <div id="search-menu" class="hidden">
+        <input type="text" id="search-input" placeholder="오퍼레이터/가젯 검색..." autocomplete="off">
+        <ul id="search-results"></ul>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
