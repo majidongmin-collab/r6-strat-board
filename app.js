@@ -17,7 +17,7 @@ const r6Data = [
     { name: 'Rook', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Rook.png' },
     { name: 'Kapkan', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Kapkan.png' },
     { name: 'Tachanka', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Tachanka.png' },
-    { name: 'Jäger', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Jager.png' },
+    { name: 'Ja ger', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Jager.png' },
     { name: 'Bandit', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Bandit.png' },
 
     // 2. 1년차 ~ 5년차 대원
@@ -77,7 +77,7 @@ const r6Data = [
     { name: 'Maverick', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Maverick.png' },
     { name: 'Nomad', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Nomad.png' },
     { name: 'Gridlock', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Gridlock.png' },
-    { name: 'Nøkk', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Nokk.png' },
+    { name: 'Nokk', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Nokk.png' },
     { name: 'Amaru', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Amaru.png' },
     { name: 'Kali', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Kali.png' },
     { name: 'Iana', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Iana.png' },
