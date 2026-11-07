@@ -1,55 +1,56 @@
-// 1. app.js 맨 상단의 고정 크기 변수를 아래 코드로 교체해줘
 const container = document.getElementById('konva-holder');
 
-// 현재 화면(툴바 너비)에 맞춘 가로 크기 계산
-const canvasWidth = container.offsetWidth; 
-// 16:9 비율을 유지하며 세로 크기 계산 (576 / 1024 = 0.5625)
-const canvasHeight = canvasWidth * 0.5625;
+// 📐 논리 좌표계 (모든 맵·가젯·그림은 이 크기를 기준으로 저장됨)
+// 맵 청사진이 4:3(5000x3750)이라 같은 비율 사용.
+// 창 크기가 바뀌면 이 좌표계를 통째로 확대/축소(scale)만 하므로 위치가 절대 어긋나지 않음.
+const BASE_WIDTH = 1024;
+const BASE_HEIGHT = 768;
 
 // 📦 통합 에셋 데이터베이스
 const r6Data = [
     // 🛡️ 수비팀 (Defenders)
-    { name: 'Smoke', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Smoke.png' },
-    { name: 'Mute', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Mute.png' },
-    { name: 'Castle', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Castle.png' },
-    { name: 'Pulse', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Pulse.png' },
-    { name: 'Doc', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Doc.png' },
-    { name: 'Rook', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Rook.png' },
-    { name: 'Kapkan', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Kapkan.png' },
-    { name: 'Tachanka', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Tachanka.png' },
-    { name: 'Ja ger', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Jager.png' },
-    { name: 'Bandit', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Bandit.png' },
+    { name: 'Smoke', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Smoke.png' },
+    { name: 'Mute', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Mute.png' },
+    { name: 'Castle', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Castle.png' },
+    { name: 'Pulse', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Pulse.png' },
+    { name: 'Doc', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Doc.png' },
+    { name: 'Rook', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Rook.png' },
+    { name: 'Kapkan', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Kapkan.png' },
+    { name: 'Tachanka', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Tachanka.png' },
+    { name: 'Jager', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Jager.png' },
+    { name: 'Bandit', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Bandit.png' },
 
     // 2. 1년차 ~ 5년차 대원
-    { name: 'Frost', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Frost.png' },
-    { name: 'Valkyrie', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Valkyrie.png' },
-    { name: 'Caveira', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Caveira.png' },
-    { name: 'Echo', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Echo.png' },
-    { name: 'Mira', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Mira.png' },
-    { name: 'Lesion', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Lesion.png' },
-    { name: 'Ela', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Ela.png' },
-    { name: 'Vigil', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Vigil.png' },
-    { name: 'Maestro', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Maestro.png' },
-    { name: 'Alibi', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Alibi.png' },
-    { name: 'Clash', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Clash.png' },
-    { name: 'Kaid', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Kaid.png' },
-    { name: 'Mozzie', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Mozzie.png' },
-    { name: 'Warden', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Warden.png' },
-    { name: 'Goyo', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Goyo.png' },
-    { name: 'Wamai', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Wamai.png' },
-    { name: 'Oryx', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Oryx.png' },
-    { name: 'Melusi', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Melusi.png' },
-    { name: 'Aruni', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Aruni.png' },
+    { name: 'Frost', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Frost.png' },
+    { name: 'Valkyrie', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Valkyrie.png' },
+    { name: 'Caveira', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Caveira.png' },
+    { name: 'Echo', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Echo.png' },
+    { name: 'Mira', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Mira.png' },
+    { name: 'Lesion', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Lesion.png' },
+    { name: 'Ela', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Ela.png' },
+    { name: 'Vigil', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Vigil.png' },
+    { name: 'Maestro', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Maestro.png' },
+    { name: 'Alibi', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Alibi.png' },
+    { name: 'Clash', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Clash.png' },
+    { name: 'Kaid', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Kaid.png' },
+    { name: 'Mozzie', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Mozzie.png' },
+    { name: 'Warden', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Warden.png' },
+    { name: 'Goyo', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Goyo.png' },
+    { name: 'Wamai', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Wamai.png' },
+    { name: 'Oryx', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Oryx.png' },
+    { name: 'Melusi', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Melusi.png' },
+    { name: 'Aruni', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Aruni.png' },
 
     // 3. 6년차 ~ 현재
-    { name: 'Thunderbird', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Thunderbird.png' },
-    { name: 'Thorn', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Thorn.png' },
-    { name: 'Azami', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Azami.png' },
-    { name: 'Solis', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Solis.png' },
-    { name: 'Fenrir', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Fenrir.png' },
-    { name: 'Tubarão', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Tubarão.png' },
-    { name: 'Sentry', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Sentry.png' },
-    { name: 'Skopós', type: 'Defender', img: 'Gadgets/Operator Icons/defence/Skopos.png' },
+    { name: 'Thunderbird', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Thunderbird.png' },
+    { name: 'Thorn', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Thorn.png' },
+    { name: 'Azami', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Azami.png' },
+    { name: 'Solis', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Solis.png' },
+    { name: 'Fenrir', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Fenrir.png' },
+    { name: 'Tubarao', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Tubarao.png' },
+    { name: 'Sentry', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Sentry.png' },
+    { name: 'Skopos', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Skopos.png' },
+    { name: 'Noor', type: 'Defender', img: 'Gadgets/Operator Icons/Defence/Noor.png' },
 
         // ⚔️ 공격팀 (Attackers)
         { name: 'Sledge', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Sledge.png' },
@@ -61,12 +62,12 @@ const r6Data = [
     { name: 'Glaz', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Glaz.png' },
     { name: 'Fuze', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Fuze.png' },
     { name: 'Blitz', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Blitz.png' },
-    { name: 'IQ', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/IQ.png' },
+    { name: 'IQ', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Iq.png' },
 
     // 2. 1년차 ~ 5년차 대원
     { name: 'Buck', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Buck.png' },
     { name: 'Blackbeard', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Blackbeard.png' },
-    { name: 'Capitão', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Capitao.png' },
+    { name: 'Capitao', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Capitao.png' },
     { name: 'Hibana', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Hibana.png' },
     { name: 'Jackal', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Jackal.png' },
     { name: 'Ying', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Ying.png' },
@@ -95,28 +96,26 @@ const r6Data = [
     { name: 'Striker', type: 'Attacker', img: 'Gadgets/Operator Icons/Attack/Striker.png' },
 
     // 🎒 가젯 (Gadgets)
-    { name: 'Bulletproof Camera', type: 'Gadget', img: 'Gadgets/Defence_Util/Camera-White.png' },
+    { name: 'Bulletproof Camera', type: 'Gadget', img: 'Gadgets/Defence_Util/Bulletproof Camera.png' },
     { name: 'Impact Grenade', type: 'Gadget', img: 'Gadgets/Defence_Util/Impact-White.png' },
     { name: 'Observation Blocker', type: 'Gadget', img: 'Gadgets/Defence_Util/Observation-Blocker-White.png' },
     { name: 'Reinforcement', type: 'Gadget', img: 'Gadgets/Defence_Util/Reinforncment-White.png' },
-    { name: 'Deployable Shield', type: 'Gadget', img: 'Gadgets/Defence_Util/Shield-Full-White.png' },
     { name: 'Barbed Wire', type: 'Gadget', img: 'Gadgets/Defence_Util/Barbedwire-White.png' },
     { name: 'Barricade', type: 'Gadget', img: 'Gadgets/Defence_Util/Barricade-White.png' },
     { name: 'Proximity Alarm', type: 'Gadget', img: 'Gadgets/Defence_Util/Beeper-White.png' },
-    { name: 'Bulletproof Shield', type: 'Gadget', img: 'Gadgets/Defence_Util/Bullet-Proof-White.png' },
+    { name: 'Shield', type: 'Gadget', img: 'Gadgets/Defence_Util/Shield-White.png' },
     { name: 'Nitro Cell', type: 'Gadget', img: 'Gadgets/Defence_Util/C4-White.png' },
-    { name: 'Line', type: 'Gadget', img: 'Gadgets/Defence_Util/line.png' },
 ];
 
 let selectedGadget = null; // 현재 마우스로 클릭해 선택한 가젯을 담을 변수
 
-// ★ 사용자의 모든 추가/그리기 행동을 기록할 배열
-const historyStack = [];
+// ★ 사용자의 모든 추가/그리기 행동을 기록할 배열 (현재 맵의 기록을 가리킴, 맵 전환 시 교체됨)
+let historyStack = [];
 
 const stage = new Konva.Stage({
     container: 'konva-holder', // index.html의 id와 매치
-    width: canvasWidth,
-    height: canvasHeight
+    width: BASE_WIDTH,
+    height: BASE_HEIGHT
 });
 
 const layer = new Konva.Layer();
@@ -157,6 +156,48 @@ let copiedGadget = null; // 복사된 가젯을 기억할 변수
 // 캔버스 배경 이미지를 저장해둘 변수 (지도를 바꿀 때 이전 지도를 지우기 위함)
 let mapBackground = null;
 
+// 🗺️ 맵별 작업 보관함
+// 같은 맵 안에서 층을 바꾸면 아이콘·그림이 그대로 유지되고,
+// 다른 맵으로 가면 현재 맵 작업은 보관해 뒀다가 돌아올 때 복원함.
+// boards[맵이름] = { gadgets: 가젯 그룹(layer), drawings: 그림 그룹(drawingLayer), history: Ctrl+Z 기록 }
+const boards = {};
+let currentMapName = null;
+let currentBoard = null;
+
+function switchBoard(mapName) {
+    if (mapName === currentMapName) return; // 같은 맵의 층 전환 → 아무것도 건드리지 않음
+
+    // 선택 상태 해제 (다른 맵의 가젯이 선택된 채로 남지 않게)
+    transformer.nodes([]);
+    selectedGadget = null;
+
+    // 현재 맵 작업은 화면에서 떼어내 보관 (destroy가 아니라 remove라서 그대로 남아 있음)
+    if (currentBoard) {
+        currentBoard.gadgets.remove();
+        currentBoard.drawings.remove();
+    }
+
+    // 처음 가는 맵이면 빈 보관함 생성
+    if (!boards[mapName]) {
+        boards[mapName] = {
+            gadgets: new Konva.Group({ name: 'gadget-group' }),
+            drawings: new Konva.Group({ name: 'drawing-group' }),
+            history: []
+        };
+    }
+
+    currentMapName = mapName;
+    currentBoard = boards[mapName];
+    historyStack = currentBoard.history;
+
+    layer.add(currentBoard.gadgets);
+    drawingLayer.add(currentBoard.drawings);
+    transformer.moveToTop(); // 조절 테두리는 항상 가젯보다 위에
+
+    // 그리기 모드 등 현재 도구 상태에 맞춰 드래그 가능 여부 맞춤
+    currentBoard.gadgets.find('.gadget-item').forEach(g => g.draggable(currentMode === 'select'));
+}
+
 // 2. 맵 전환 함수 (사이드바 버튼 클릭 시 실행)
 function loadMap(mapName, floor) {
     // [A] 버튼 하이라이트(active 클래스) 시각적 전환 처리
@@ -170,20 +211,12 @@ function loadMap(mapName, floor) {
         }
     });
 
-    // ★ [추가된 핵심 기능] 맵이 바뀔 때 캔버스 위의 모든 요소 싹 비우기 (자동 초기화)
-    // 1. 조절창(트랜스포머)이 켜져 있다면 끄기
-    transformer.nodes([]);
-
-    selectedGadget = null;
-
-    // 2. 화면에 있는 모든 가젯 찾아서 파괴
-    stage.find('.gadget-item').forEach(node => node.destroy());
-
-    drawingLayer.destroyChildren();
-    drawingLayer.draw(); // 지운 상태로 도화지 새로고침
+    // 맵별 작업 전환 (같은 맵의 층 전환이면 아이콘·그림 그대로 유지)
+    switchBoard(mapName);
 
     // [B] 이미지 경로 설정 
-    const imagePath = `assets/${mapName}/${floor}.jpg`; 
+    // 2048px WebP 경량본 사용 (원본 5000px JPG는 같은 폴더에 그대로 보관)
+    const imagePath = `assets/${mapName}/${floor}.webp`;
 
     // [C] 자바스크립트로 이미지 로드 시작
     const imageObj = new Image();
@@ -196,13 +229,18 @@ function loadMap(mapName, floor) {
             mapBackground.destroy();
         }
 
+        // 이미지 원본 비율을 유지한 채 논리 좌표계 안에 꽉 차게 맞춤 (찌그러짐 방지)
+        const fit = Math.min(BASE_WIDTH / imageObj.width, BASE_HEIGHT / imageObj.height);
+        const drawW = imageObj.width * fit;
+        const drawH = imageObj.height * fit;
+
         // Konva용 이미지 객체 생성
         mapBackground = new Konva.Image({
-            x: 0,
-            y: 0,
+            x: (BASE_WIDTH - drawW) / 2,
+            y: (BASE_HEIGHT - drawH) / 2,
             image: imageObj,
-            width: canvasWidth,  // 캔버스 가로 크기에 맞춤
-            height: canvasHeight // 캔버스 세로 크기에 맞춤
+            width: drawW,
+            height: drawH
         });
 
         // 배경 이미지를 레이어의 가장 뒤(바닥)로 보냄
@@ -245,13 +283,14 @@ function spawnGadget(pathAndName,customX, customY) {
         });
 
         // 클릭 시 선택 및 조절 상자 표시
+        // ※ 클로저의 gadget 대신 this 사용: clone()이 이 리스너를 복사해도 복제본 자신이 선택되도록
         gadget.on('click tap', function() {
-            selectedGadget = gadget;
-            transformer.nodes([gadget]);
+            selectedGadget = this;
+            transformer.nodes([this]);
             layer.draw();
         });
 
-        layer.add(gadget);
+        currentBoard.gadgets.add(gadget);
         // [Ctrl+Z용 기록]
         historyStack.push(gadget);
         
@@ -265,33 +304,20 @@ function spawnGadget(pathAndName,customX, customY) {
 }
 
 // 4. 기능 버튼 이벤트 리스너 설정
-// [선택 가젯 삭제] 버튼 기능
-document.getElementById('delete-btn').addEventListener('click', () => {
-    if (selectedGadget) {
-        selectedGadget.destroy(); // 1. 캔버스에서 가젯 객체 제거
-        layer.draw();             // 2. 레이어 다시 그리기
-        selectedGadget = null;    // 3. 변수 비우기
-        console.log("선택한 가젯 삭제 완료");
-    } else {
-        alert('삭제할 가젯을 먼저 마우스로 클릭해 줘!');
-    }
-});
+// ([선택 가젯 삭제] 버튼은 아래 deleteActiveGadget 섹션에서 연결)
 
-// [전체 초기화] 버튼 기능 (배경 지도는 남기고 가젯만 싹 지우기)
-// [전체 초기화] 버튼 기능
+// [전체 초기화] 버튼 기능 (현재 맵의 가젯·그림만 지움, 배경 지도와 다른 맵 작업은 유지)
 document.getElementById('reset-btn').addEventListener('click', () => {
-    // 네가 만든 훌륭한 안전장치 (알림창) 유지!
-    if (confirm('배치된 모든 가젯과 그린 그림들을 싹 다 초기화할까?')) {
+    if (confirm('현재 맵에 배치된 모든 가젯과 그린 그림들을 싹 다 초기화할까?')) {
         
         // 1. 조절기(테두리)가 켜져 있다면 선택 해제
         transformer.nodes([]);
         selectedGadget = null;
 
-        // 2. 가젯 파괴 (기존 기능)
-        const gadgets = stage.find('.gadget-item');
-        gadgets.forEach(gadget => gadget.destroy());
-        
-        drawingLayer.destroyChildren();
+        // 2. 현재 맵의 가젯·그림·실행취소 기록 비우기 (그룹 자체는 남겨둠)
+        currentBoard.gadgets.destroyChildren();
+        currentBoard.drawings.destroyChildren();
+        historyStack.length = 0;
 
         // 4. 화면 새로고침 (두 레이어 모두 업데이트)
         layer.draw(); 
@@ -350,7 +376,7 @@ stage.on('mousedown touchstart', function (e) {
     if (currentMode === 'select') return; // 선택 모드면 그리지 않음
     
     isDrawing = true;
-    const pos = stage.getPointerPosition();
+    const pos = stage.getRelativePointerPosition();
     const color = colorPicker.value;
     const size = parseInt(brushSize.value, 10);
 
@@ -365,7 +391,7 @@ stage.on('mousedown touchstart', function (e) {
             points: [pos.x, pos.y, pos.x, pos.y],
             name: 'drawn-shape'
         });
-        drawingLayer.add(currentShape);
+        currentBoard.drawings.add(currentShape);
     } 
     // [화살표 그리기]
     else if (currentMode === 'arrow') {
@@ -378,7 +404,7 @@ stage.on('mousedown touchstart', function (e) {
             points: [pos.x, pos.y, pos.x, pos.y],
             name: 'drawn-shape'
         });
-        drawingLayer.add(currentShape);
+        currentBoard.drawings.add(currentShape);
     }
 });
 
@@ -386,7 +412,7 @@ stage.on('mousedown touchstart', function (e) {
 stage.on('mousemove touchmove', function (e) {
     if (!isDrawing || currentMode === 'select') return;
     e.evt.preventDefault();
-    const pos = stage.getPointerPosition();
+    const pos = stage.getRelativePointerPosition();
 
     // 펜이나 지우개는 지나가는 경로(points)를 계속 추가
     if (currentMode === 'draw' || currentMode === 'eraser') {
@@ -441,8 +467,10 @@ window.addEventListener('keydown', function(e) {
                 lastItem.destroy();
                 if (targetLayer) targetLayer.draw(); // 가젯이면 layer를, 선이면 drawingLayer를 알아서 새로고침!
 
+                // 실행 취소 후에는 선택 상태를 테두리와 변수 모두 함께 해제
                 transformer.nodes([]);
-                
+                selectedGadget = null;
+
                 console.log('실행 취소(Undo) 성공!');
                 break; // 한 번 눌렀을 때 하나만 지우고 반복문 탈출
             }
@@ -471,26 +499,22 @@ window.addEventListener('keydown', function(e) {
                     y: copiedGadget.y() + 20
                 });
 
-                // 2. Konva의 clone()은 이벤트 리스너까지 복사하진 않으므로 수동 연결
-                // (마우스 드래그가 끝났을 때 Ctrl+Z 히스토리에 저장하는 기능)
-                clone.on('dragend', function () {
-                    if (typeof saveState === 'function') saveState();
-                });
+                // 2. clone()은 클릭 리스너도 복사함 (spawnGadget에서 this를 쓰므로 복제본이 정상 선택됨)
+                //    현재 도구 모드에 맞춰 드래그 가능 여부만 맞춰줌
+                clone.draggable(currentMode === 'select');
 
-                // 3. 레이어에 복제본 추가하고 캔버스 맨 위로 끌어올리기
-                drawingLayer.add(clone);
+                // 3. 가젯 레이어(layer)에 추가 — spawnGadget과 동일한 레이어
+                currentBoard.gadgets.add(clone);
                 clone.moveToTop();
 
-                // 4. 붙여넣은 가젯을 즉시 '선택된 상태(노란 테두리)'로 전환! UX 디테일 ✨
+                // 4. 붙여넣은 가젯을 즉시 '선택된 상태(노란 테두리)'로 전환
                 selectedGadget = clone;
-                if (typeof transformer !== 'undefined') {
-                    transformer.nodes([clone]);
-                    transformer.moveToTop();
-                }
+                transformer.nodes([clone]);
+                transformer.moveToTop();
 
-                // 5. 화면 싹 다시 그리고 실행 취소 스택에 찰칵! 저장
-                drawingLayer.draw();
-                if (typeof saveState === 'function') saveState();
+                // 5. 화면 다시 그리고 Ctrl+Z 기록에 추가
+                layer.draw();
+                historyStack.push(clone);
             }
         }    
 });
@@ -498,24 +522,20 @@ window.addEventListener('keydown', function(e) {
 // ==========================================
 // 9. 브라우저 창 크기 변경 시 캔버스 자동 반응형 조절
 // ==========================================
-window.addEventListener('resize', () => {
-    // 1. 바뀐 컨테이너의 너비 다시 계산
-    const newWidth = container.offsetWidth; 
-    const newHeight = newWidth * 0.5625; // 16:9 비율 유지
+// 스테이지 픽셀 크기만 바꾸고, 내용물은 scale로 통째로 확대/축소.
+// 가젯·그림 좌표는 논리 좌표(BASE_WIDTH x BASE_HEIGHT) 그대로라 어긋나지 않음.
+function fitStageToContainer() {
+    const scale = Math.min(
+        container.clientWidth / BASE_WIDTH,
+        container.clientHeight / BASE_HEIGHT
+    );
+    stage.width(BASE_WIDTH * scale);
+    stage.height(BASE_HEIGHT * scale);
+    stage.scale({ x: scale, y: scale });
+}
 
-    // 2. 스테이지 크기 업데이트
-    stage.width(newWidth);
-    stage.height(newHeight);
-
-    // 3. 배경 지도가 깔려있다면 배경 지도 크기도 업데이트
-    if (mapBackground) {
-        mapBackground.width(newWidth);
-        mapBackground.height(newHeight);
-    }
-
-    // 4. 화면 다시 그리기
-    stage.draw();
-});
+fitStageToContainer();
+window.addEventListener('resize', fitStageToContainer);
 
 // ==========================================
 // 🗑️ 가젯 삭제 공통 함수 및 이벤트 (최적화 완료)
@@ -560,21 +580,18 @@ const searchMenu = document.getElementById('search-menu');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 
-// 💡 중요: Konva 캔버스가 들어있는 부모 div의 ID를 적어줘 (예: 'container')
-const stageContainer = document.getElementById('konva-holder'); 
-
 let spawnX = null;
 let spawnY = null;
 
 // 1. 캔버스 위에서 우클릭(contextmenu) 감지
-stageContainer.addEventListener('contextmenu', function(e) {
+container.addEventListener('contextmenu', function(e) {
     e.preventDefault(); // 브라우저 기본 우클릭 메뉴가 뜨는 것을 완벽히 차단!
 
     // 마우스의 X, Y 좌표 계산
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
-    const pointerPos = stage.getPointerPosition();
+    const pointerPos = stage.getRelativePointerPosition();
     if(pointerPos) {
         spawnX = pointerPos.x;
         spawnY = pointerPos.y;
@@ -635,11 +652,7 @@ searchInput.addEventListener('input', function() {
 
         // 🎯 목록에서 항목을 클릭했을 때의 동작!
         li.addEventListener('click', () => {
-            console.log('선택된 항목:', item.name); // (임시) 개발자 도구에 이름 띄우기
-            
-            if (typeof spawnGadget === 'function') {
-                spawnGadget(item.img, spawnX, spawnY); 
-            }
+            spawnGadget(item.img, spawnX, spawnY);
             // 선택이 끝났으니 검색창은 다시 숨기기
             searchMenu.classList.remove('visible');
         });

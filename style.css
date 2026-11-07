@@ -32,6 +32,11 @@ body {
 #konva-holder {
     width: 100%;     /* 부모인 canvas-area 너비에 꽉 맞춤 */
     flex-grow: 1;
+    min-height: 0;   /* 캔버스가 컨테이너를 밀어서 키우지 않도록 */
+    overflow: hidden;
+    display: flex;
+    justify-content: center; /* 남는 공간이 생기면 맵을 가운데 정렬 */
+    align-items: center;
 }
 
 /* 오른쪽 사이드바 구역 */
@@ -168,7 +173,7 @@ body {
   box-sizing: border-box;
 }
 
-.toolbar-left, .toolbar-right {
+.toolbar-right {
   display: flex;
   align-items: center;
   gap: 12px; /* 버튼 사이 간격 */
@@ -193,13 +198,6 @@ body {
 }
 .panel.active {
     display: block;
-}
-
-/* 상단 탭 버튼 활성화 디자인 (스크린샷의 주황색 느낌 통일) */
-.tab-btn.active {
-    background-color: #ff9f1c;
-    color: #000000;
-    border-color: #ff9f1c;
 }
 
 .panel h2 {
